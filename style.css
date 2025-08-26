@@ -1,0 +1,588 @@
+:root {
+    --color-primary: #a5d6a7;
+    --color-secondary: #ffcc80;
+    --color-accent: #90caf9;
+    --color-background: #f5f5f5;
+    --color-card: #ffffff;
+    --color-text: #333333;
+    --color-text-light: #666666;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --radius: 12px;
+    --wood: #caccc9;
+    --field: #a1cca3;
+    --pasture: #c5e1a5;
+    --mountain: #b0bec5;
+    --hill: #ffab91;
+    --forest: #9ccc65;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--color-background);
+    color: var(--color-text);
+    line-height: 1.6;
+    padding: 20px;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23f0f0f0"/><path d="M0 0L100 100" stroke="%23e0e0e0" stroke-width="1"/><path d="M100 0L0 100" stroke="%23e0e0e0" stroke-width="1"/></svg>');
+    background-size: 20px 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+header h1 {
+    color: var(--color-text);
+    margin-bottom: 10px;
+    font-size: 2.5rem;
+}
+
+header p {
+    color: var(--color-text-light);
+    font-size: 1.1rem;
+}
+
+/* Navegación con hexágonos */
+.hexagon-nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+    gap: 15px;
+}
+
+.hexagon {
+    position: relative;
+    width: 120px;
+    height: 69px;
+    margin: 34px 0;
+    background: var(--wood);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.hexagon:before,
+.hexagon:after {
+    content: "";
+    position: absolute;
+    width: 0;
+    border-left: 60px solid transparent;
+    border-right: 60px solid transparent;
+}
+
+.hexagon:before {
+    bottom: 100%;
+    border-bottom: 34px solid var(--wood);
+}
+
+.hexagon:after {
+    top: 100%;
+    border-top: 34px solid var(--wood);
+}
+
+.hexagon.active {
+    background: var(--field);
+    transform: scale(1.1);
+    z-index: 2;
+}
+
+.hexagon.active:before {
+    border-bottom: 34px solid var(--field);
+}
+
+.hexagon.active:after {
+    border-top: 34px solid var(--field);
+}
+
+.hexagon:hover {
+    background: var(--pasture);
+    transform: scale(1.05);
+}
+
+.hexagon:hover:before {
+    border-bottom: 34px solid var(--pasture);
+}
+
+.hexagon:hover:after {
+    border-top: 34px solid var(--pasture);
+}
+
+.hexagon-inner {
+    text-align: center;
+    z-index: 1;
+    color: var(--color-text);
+}
+
+.hexagon-inner i {
+    font-size: 24px;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.hexagon-inner span {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.btn-hex {
+    background: var(--wood);
+    padding: 12px 20px;
+    border-radius: var(--radius);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center; /* centrar contenido */
+    gap: 8px;
+    height: 50px; /* altura fija para igualar */
+    box-sizing: border-box;
+}
+
+.btn-hex i {
+    font-size: 18px;
+}
+
+.btn-hex:hover {
+    background: var(--pasture);
+    transform: scale(1.05);
+}
+
+.btn-hex.active {
+    background: var(--field);
+    transform: scale(1.1);
+}
+
+.btn-hex input {
+    display: none; /* asegurar que el input invisible no afecte el tamaño */
+}
+
+/* Secciones */
+.section {
+    display: none;
+    background: white;
+    padding: 25px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 30px;
+}
+
+.section.active {
+    display: block;
+}
+
+.section h2 {
+    margin-bottom: 20px;
+    color: var(--color-text);
+    border-bottom: 2px solid var(--color-primary);
+    padding-bottom: 10px;
+}
+
+/* Filtros */
+.filters, .search-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.filters input, .search-filters input,
+.filters select, .search-filters select {
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: var(--radius);
+    font-size: 16px;
+    flex: 1;
+    min-width: 150px;
+}
+
+.filters button, .search-filters button {
+    padding: 10px 20px;
+    background-color: var(--color-primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s;
+}
+
+.filters button:hover, .search-filters button:hover {
+    background-color: var(--pasture);
+}
+
+/* Grid de juegos */
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+.game-card {
+    background: white;
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.game-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.game-image {
+    height: 180px;
+    background-color: var(--color-accent);
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 50px;
+}
+
+.game-details {
+    padding: 20px;
+    flex-grow: 1;
+}
+
+.game-details h3 {
+    margin-bottom: 10px;
+    color: var(--color-text);
+    font-size: 1.3rem;
+}
+
+.game-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    color: var(--color-text-light);
+}
+
+.game-info span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.game-description {
+    margin-bottom: 15px;
+    color: var(--color-text);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.game-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: auto;
+}
+
+.btn {
+    padding: 8px 15px;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.btn-details {
+    background-color: var(--color-accent);
+    color: white;
+}
+
+.btn-details:hover {
+    background-color: #52affc;
+}
+
+.btn-wishlist.heart {
+    background-color: #ff69b4; /* rosa */
+    color: white;
+}
+
+.btn-wishlist.heart:hover {
+    background-color: #ff85c1; /* rosa más claro al pasar */
+}
+
+.btn-wishlist.star {
+    background-color: #ffe604; /* amarillo dorado */
+    color: white;
+}
+
+.btn-wishlist.star:hover {
+    background-color: #ffea50; /* amarillo más claro al pasar */
+}
+
+
+.btn-delete {
+    background-color: #f44336;
+    color: white;
+}
+
+.btn-delete:hover {
+    background-color: #e53935;
+}
+
+/* Formulario */
+.game-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: var(--radius);
+    font-size: 16px;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.game-form button {
+    grid-column: 1 / -1;
+    padding: 15px;
+    background-color: var(--color-primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 600;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+}
+
+.game-form button:hover {
+    background-color: var(--pasture);
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    overflow: auto;
+}
+
+.modal-content {
+    background-color: white;
+    margin: 5% auto;
+    padding: 30px;
+    border-radius: var(--radius);
+    width: 90%;
+    max-width: 700px;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: rgb(51, 51, 51);
+}
+
+#modal-game-details {
+    margin-top: 20px;
+}
+
+/* Estilos para la subida de imágenes */
+#image-upload {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: var(--radius);
+    background: white;
+}
+
+#image-preview {
+    border: 1px dashed #ddd;
+    padding: 10px;
+    border-radius: var(--radius);
+    text-align: center;
+}
+
+/* Mejora visual para los botones de acción en tarjetas */
+.game-actions .btn {
+    padding: 6px 10px;
+    font-size: 0.9rem;
+}
+
+.game-description {
+    display: -webkit-box;       /* Necesario para line-clamp */
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;      /* Número de líneas que quieres mostrar */
+    overflow: hidden;           /* Oculta el resto del texto */
+    text-overflow: ellipsis;    /* Agrega "…" al final */
+}
+
+/* Responsive */
+
+@media (max-width: 480px) {
+    .game-actions {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .game-actions .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .hexagon-nav {
+        gap: 10px;
+    }
+    
+    .hexagon {
+        width: 100px;
+        height: 58px;
+        margin: 29px 0;
+    }
+    
+    .hexagon:before,
+    .hexagon:after {
+        border-left: 50px solid transparent;
+        border-right: 50px solid transparent;
+    }
+    
+    .hexagon:before {
+        border-bottom: 29px solid var(--wood);
+    }
+    
+    .hexagon:after {
+        border-top: 29px solid var(--wood);
+    }
+    
+    .hexagon.active:before {
+        border-bottom: 29px solid var(--field);
+    }
+    
+    .hexagon.active:after {
+        border-top: 29px solid var(--field);
+    }
+    
+    .hexagon:hover:before {
+        border-bottom: 29px solid var(--pasture);
+    }
+    
+    .hexagon:hover:after {
+        border-top: 29px solid var(--pasture);
+    }
+    
+    .hexagon-inner i {
+        font-size: 20px;
+    }
+    
+    .hexagon-inner span {
+        font-size: 12px;
+    }
+    
+    .filters, .search-filters {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .games-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .game-form {
+        grid-template-columns: 1fr;
+    }
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--color-text-light);
+}
+
+.empty-state i {
+    font-size: 50px;
+    margin-bottom: 15px;
+    display: block;
+    color: #ddd;
+}
+
+.empty-state p {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+/* Formulario responsive extra para móviles */
+@media (max-width: 480px) {
+    .game-form {
+        grid-template-columns: 1fr !important; /* forzar una columna */
+        gap: 15px;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        width: 100%; /* asegurar que se adapten al contenedor */
+        box-sizing: border-box;
+    }
+
+    .game-form button {
+        font-size: 16px;
+        padding: 12px;
+    }
+}

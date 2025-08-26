@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mi Coleccion de Juegos de Mesa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-jedi"></i> Colección de Juegos de mesa</h1>
+            <p>Encuentra el juego perfecto para cualquier ocasión</p>
+        </header>
+
+        <nav class="hexagon-nav">
+            <div class="hexagon active" data-section="my-games">
+                <div class="hexagon-inner">
+                    <i class="fas fa-dice"></i>
+                    <span>Mis Juegos</span>
+                </div>
+            </div>
+            <div class="hexagon" data-section="search">
+                <div class="hexagon-inner">
+                    <i class="fas fa-search"></i>
+                    <span>Buscar</span>
+                </div>
+            </div>
+            <div class="hexagon" data-section="wishlist">
+                <div class="hexagon-inner">
+                    <i class="fas fa-heart"></i>
+                    <span>Deseados</span>
+                </div>
+            </div>
+            <div class="hexagon" data-section="add-game">
+                <div class="hexagon-inner">
+                    <i class="fas fa-plus"></i>
+                    <span>Añadir</span>
+                </div>
+            </div>
+        </nav>
+
+        <main>
+            <!-- Sección Mis Juegos -->
+            <section id="my-games" class="section active">
+                <h2>Mi Colección</h2>
+                <div class="filters">
+                    <input type="text" id="search-name" placeholder="Buscar por nombre..." />
+                    <input type="number" id="search-players" placeholder="Nº jugadores" min="1" />
+                    <select id="search-duration">
+                        <option value="">Duración</option>
+                        <option value="short">Menos de 30 min</option>
+                        <option value="medium">30-60 min</option>
+                        <option value="long">Más de 60 min</option>
+                    </select>
+                    <button id="apply-filters">Filtrar</button>
+                </div>
+
+                <!-- Aquí insertamos los botones -->
+
+                <div class="export-import-container" style="
+              display: flex;
+              justify-content: center;
+              gap: 15px;
+              margin: 10px 0;
+            ">
+                    <button class="btn btn-hex" onclick="gameManager.exportGames()">
+                        <i class="fas fa-file-export"></i> Exportar juegos
+                    </button>
+                    <button class="btn btn-hex" onclick="document.getElementById('import-file').click()">
+                        <i class="fas fa-file-import"></i> Importar juegos
+                    </button>
+                    <input type="file" id="import-file" accept=".json" style="display: none"
+                        onchange="gameManager.importGames(this.files[0])" />
+                </div>
+
+                <div id="games-container" class="games-grid"></div>
+            </section>
+
+            <!-- Sección Buscar -->
+            <section id="search" class="section" style="text-align: center">
+                <h2>Buscar Juegos</h2>
+                <div class="search-filters">
+                    <input type="text" id="search-name-all" placeholder="Buscar por nombre..." />
+                    <input type="number" id="search-players-all" placeholder="Nº jugadores" min="1" />
+                    <select id="search-duration-all">
+                        <option value="">Duración</option>
+                        <option value="short">Menos de 30 min</option>
+                        <option value="medium">30-60 min</option>
+                        <option value="long">Más de 60 min</option>
+                    </select>
+                    <button id="search-button">Buscar</button>
+                </div>
+                <div id="search-results" class="games-grid"></div>
+            </section>
+
+            <!-- Sección Lista de Deseados -->
+            <section id="wishlist" class="section">
+                <h2>Juegos Deseados</h2>
+                <div id="wishlist-container" class="games-grid"></div>
+            </section>
+
+            <!-- Sección Añadir Juego -->
+            <section id="add-game" class="section">
+                <h2>Añadir nuevo juego a tu colección/deseados</h2>
+                <form id="game-form" class="game-form">
+                    <div class="form-group">
+                        <label for="game-name">Nombre del Juego *</label>
+                        <input type="text" id="game-name" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="min-players">Jugadores Mínimos *</label>
+                        <input type="number" id="min-players" min="1" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="max-players">Jugadores Máximos *</label>
+                        <input type="number" id="max-players" min="1" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="duration">Duración (minutos) *</label>
+                        <input type="number" id="duration" min="1" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Descripción</label>
+                        <textarea id="description" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="image-upload">Subir imagen desde dispositivo:</label>
+                        <input type="file" id="image-upload" accept="image/*" />
+                        <div id="image-preview" style="margin-top: 10px; display: none">
+                            <img id="preview-img" style="max-width: 200px; max-height: 150px" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="link">Enlace Externo</label>
+                        <input type="text" id="link" />
+                    </div>
+                    <div class="form-group">
+                        <label for="category">Categoría</label>
+                        <input type="text" id="category" placeholder="Ej: Party, Estratégico..." />
+                    </div>
+                    <button type="submit">Añadir Juego</button>
+                </form>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal para detalles del juego -->
+    <div id="game-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="modal-game-details"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+
+    <!-- Input invisible para importar JSON -->
+    <input type="file" id="import-file" accept=".json" style="display: none" />
+</body>
+
+</html>
