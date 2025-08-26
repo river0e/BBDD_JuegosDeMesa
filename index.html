@@ -38,7 +38,7 @@
             <div class="hexagon" data-section="add-game">
                 <div class="hexagon-inner">
                     <i class="fas fa-plus"></i>
-                    <span>Añadir</span>
+                    <span>Añadir juego</span>
                 </div>
             </div>
         </nav>
@@ -62,15 +62,17 @@
                 <!-- Aquí insertamos los botones -->
 
                 <div class="export-import-container" style="
-              display: flex;
-              justify-content: center;
-              gap: 15px;
-              margin: 10px 0;
-            ">
-                    <button class="btn btn-hex" onclick="gameManager.exportGames()">
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin: 10px 0;
+    ">
+                    <button class="btn btn-hex" onclick="gameManager.exportGames()"
+                        title="Exporta un archivo con tus juegos para verlos en otro dispositivo/perfil">
                         <i class="fas fa-file-export"></i> Exportar juegos
                     </button>
-                    <button class="btn btn-hex" onclick="document.getElementById('import-file').click()">
+                    <button class="btn btn-hex" onclick="document.getElementById('import-file').click()"
+                        title="Importa un archivo con tus juegos para verlos en otro dispositivo/perfil">
                         <i class="fas fa-file-import"></i> Importar juegos
                     </button>
                     <input type="file" id="import-file" accept=".json" style="display: none"
@@ -142,6 +144,15 @@
                         <label for="category">Categoría</label>
                         <input type="text" id="category" placeholder="Ej: Party, Estratégico..." />
                     </div>
+
+                    <div class="form-group">
+                        <label for="list-select">Añadir a:</label>
+                        <select id="list-select">
+                            <option value="my-games" selected>Mis Juegos</option>
+                            <option value="wishlist">Deseados</option>
+                        </select>
+                    </div>
+
                     <button type="submit">Añadir Juego</button>
                 </form>
             </section>

@@ -22,7 +22,7 @@ const initialGames = [
     description:
       "Juego de imaginación y creatividad donde los jugadores dan pistas sobre ilustraciones oníricas.",
     image:
-      "https://i0.wp.com/www.julianmarquina.es/wp-content/uploads/Dixit-version-gratuita-del-famoso-juego-de-mesa-de-cuentacuentos.jpg?fit=1200%2C822&ssl=1",
+      "https://juegosdemesayrol.com/wp-content/uploads/Dixit-1-1.jpg",
     link: "https://zacatrus.es/dixit.html",
     category: "Familiar",
   },
@@ -35,21 +35,21 @@ const initialGames = [
     description:
       "Juego de palabras donde dos equipos compiten para encontrar a todos sus agentes secretos.",
     image:
-      "https://devir.es/sites/default/files/styles/product/public/2023-03/codigosecreto.png",
+      "https://i0.wp.com/losjuegossobrelamesa.com/wp-content/uploads/Tablero2.jpg?fit=820%2C507&ssl=1",
     link: "https://devir.es/codigo-secreto",
     category: "Party",
   },
   {
     id: 4,
-    name: "Ticket to Ride",
+    name: "Aventureros al tren",
     minPlayers: 2,
     maxPlayers: 5,
     duration: 60,
     description:
       "Juego de construir rutas de tren a través de Norteamérica recolectando cartas de colores.",
     image:
-      "https://zacatrus.es/media/catalog/product/t/i/ticket-to-ride-europa-1.jpg",
-    link: "https://zacatrus.es/ticket-to-ride-europa.html",
+      "https://juegosdemesayrol.com/wp-content/uploads/C8A9209.jpg",
+    link: "https://zacatrus.es/aventureros-al-tren-europa.html",
     category: "Familiar",
   },
   {
@@ -60,7 +60,7 @@ const initialGames = [
     duration: 30,
     description:
       "Juego de cartas de drafting donde los jugadores construyen una civilización a lo largo de tres eras.",
-    image: "https://zacatrus.es/media/catalog/product/7/w/7wonders2020-1_1.jpg",
+    image: "https://tabletopterrain.com/cdn/shop/files/tabletop-terrain-board-game-insert-7-wonders-2nd-edition-with-expansions-board-game-insert-organizer-39610962804963.webp?v=1683486676&width=1214",
     link: "https://zacatrus.es/7-wonders-nueva-edicion.html",
     category: "Estratégico",
   },
@@ -315,9 +315,10 @@ class GameManager {
     <i class="fas ${isInWishlist ? "fa-heart" : "fa-star"}"></i>
 </button>
                     ${
-                      !isSearchResult && isInGames
+                      !isSearchResult && (isInGames || isInWishlist)
                         ? `
-                    <button class="btn btn-delete" onclick="gameManager.deleteGame(${game.id})">
+                    <button class="btn btn-delete" onclick="gameManager.deleteGame(${game.id})"
+                    title="Eliminar este juego de tu colección o lista de deseados">
                         <i class="fas fa-trash"></i>
                     </button>
                     `
@@ -387,7 +388,7 @@ class GameManager {
   }
 
   // Añadir nuevo juego (con comprobaciones seguras)
-  addGame(event) {
+addGame(event) {
     event.preventDefault();
 
     const name = document.getElementById("game-name").value;
@@ -407,35 +408,60 @@ class GameManager {
 
     // Validación básica
     if (minPlayers > maxPlayers) {
-      alert("El número mínimo de jugadores no puede ser mayor que el máximo");
-      return;
+        alert("El número mínimo de jugadores no puede ser mayor que el máximo");
+        return;
     }
 
+    // Leer el selector de lista
+    const list = document.getElementById("list-select").value;
+
+    // Crear el objeto del juego
     const newGame = {
-      id: Date.now(),
-      name,
-      minPlayers,
-      maxPlayers,
-      duration,
-      description,
-      image: imageUrl, // por defecto usamos la URL si existe
-      link,
-      category,
+        id: Date.now(),
+        name,
+        minPlayers,
+        maxPlayers,
+        duration,
+        description,
+        image: imageUrl,
+        link,
+        category,
+    };
+
+    // Función para añadir a la lista correcta
+    const finalizeAdd = (game, list) => {
+        if (list === "my-games") {
+            this.games.push(game);
+        } else {
+            this.wishlistGames.push(game);
+        }
+        this.saveGames();
+        this.saveWishlist();
+        this.renderGames();
+
+        const form = document.getElementById("game-form");
+        if (form) form.reset();
+
+        const preview = document.getElementById("image-preview");
+        if (preview) preview.style.display = "none";
+
+        alert("¡Juego añadido correctamente!");
+        this.showSection("my-games");
     };
 
     // Si hay input file y archivo seleccionado, guardamos base64
     if (imageUpload && imageUpload.files && imageUpload.files.length > 0) {
-      const file = imageUpload.files[0];
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        newGame.image = e.target.result;
-        this.finalizeAddGame(newGame);
-      };
-      reader.readAsDataURL(file);
+        const file = imageUpload.files[0];
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            newGame.image = e.target.result;
+            finalizeAdd(newGame, list);
+        };
+        reader.readAsDataURL(file);
     } else {
-      this.finalizeAddGame(newGame);
+        finalizeAdd(newGame, list);
     }
-  }
+}
 
   // Finalizar la adición del juego (con comprobaciones seguras)
   finalizeAddGame(game) {
