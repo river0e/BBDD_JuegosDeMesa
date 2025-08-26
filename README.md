@@ -58,7 +58,7 @@ Explora la colección, añade juegos a tus deseados, filtra y busca tus juegos f
 
 ## Licencia
 
-**Copyright © 2025 Kent**
+**Copyright © 2025 river0e**
 
 Todos los derechos reservados.  
 
