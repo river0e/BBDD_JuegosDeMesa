@@ -21,8 +21,7 @@ const initialGames = [
     duration: 30,
     description:
       "Juego de imaginación y creatividad donde los jugadores dan pistas sobre ilustraciones oníricas.",
-    image:
-      "https://juegosdemesayrol.com/wp-content/uploads/Dixit-1-1.jpg",
+    image: "https://juegosdemesayrol.com/wp-content/uploads/Dixit-1-1.jpg",
     link: "https://zacatrus.es/dixit.html",
     category: "Familiar",
   },
@@ -47,8 +46,7 @@ const initialGames = [
     duration: 60,
     description:
       "Juego de construir rutas de tren a través de Norteamérica recolectando cartas de colores.",
-    image:
-      "https://juegosdemesayrol.com/wp-content/uploads/C8A9209.jpg",
+    image: "https://juegosdemesayrol.com/wp-content/uploads/C8A9209.jpg",
     link: "https://zacatrus.es/aventureros-al-tren-europa.html",
     category: "Familiar",
   },
@@ -60,7 +58,8 @@ const initialGames = [
     duration: 30,
     description:
       "Juego de cartas de drafting donde los jugadores construyen una civilización a lo largo de tres eras.",
-    image: "https://tabletopterrain.com/cdn/shop/files/tabletop-terrain-board-game-insert-7-wonders-2nd-edition-with-expansions-board-game-insert-organizer-39610962804963.webp?v=1683486676&width=1214",
+    image:
+      "https://tabletopterrain.com/cdn/shop/files/tabletop-terrain-board-game-insert-7-wonders-2nd-edition-with-expansions-board-game-insert-organizer-39610962804963.webp?v=1683486676&width=1214",
     link: "https://zacatrus.es/7-wonders-nueva-edicion.html",
     category: "Estratégico",
   },
@@ -76,6 +75,22 @@ class GameManager {
 
     // Inicializar import
     this.setupImport();
+  }
+
+  // --- Función de normalización de texto ---
+  normalizeText(text) {
+    return text
+      .normalize("NFD") // separa letras de acentos
+      .replace(/[\u0300-\u036f]/g, "") // quita acentos
+      .replace(/[^\w\s]/gi, "") // quita símbolos
+      .toLowerCase(); // minúsculas
+  }
+
+  // --- Función para escapar HTML y evitar cuelgues ---
+  escapeHTML(text) {
+    const div = document.createElement("div");
+    div.textContent = text;
+    return div.innerHTML;
   }
 
   // Cargar juegos desde localStorage
@@ -198,7 +213,7 @@ class GameManager {
       wishlistGames: this.wishlistGames,
     };
     const json = JSON.stringify(data, null, 2); // formato bonito
-    const blob = new Blob([json], { type: "application/json" });
+    const blob = new Blob([`\uFEFF${json}`], { type: "application/json;charset=utf-8" });
     const url = URL.createObjectURL(blob);
 
     const a = document.createElement("a");
@@ -304,13 +319,15 @@ class GameManager {
                     })">
                         <i class="fas fa-info-circle"></i> Detalles
                     <button 
-                        class="btn btn-wishlist ${isInWishlist ? "heart" : "star"}" 
+                        class="btn btn-wishlist ${
+                          isInWishlist ? "heart" : "star"
+                        }" 
                         onclick="${wishlistAction}"
                         title="${
-                        isInWishlist
-        ? "Pulsa el corazón para mandar este juego a tu colección (Ya es tuyo)"
-        : "Pulsa la estrella para añadir este juego a tus deseados (Si aún no lo tienes)"
-                 }"
+                          isInWishlist
+                            ? "Pulsa el corazón para mandar este juego a tu colección (Ya es tuyo)"
+                            : "Pulsa la estrella para añadir este juego a tus deseados (Si aún no lo tienes)"
+                        }"
             >
     <i class="fas ${isInWishlist ? "fa-heart" : "fa-star"}"></i>
 </button>
@@ -388,7 +405,7 @@ class GameManager {
   }
 
   // Añadir nuevo juego (con comprobaciones seguras)
-addGame(event) {
+  addGame(event) {
     event.preventDefault();
 
     const name = document.getElementById("game-name").value;
@@ -408,8 +425,8 @@ addGame(event) {
 
     // Validación básica
     if (minPlayers > maxPlayers) {
-        alert("El número mínimo de jugadores no puede ser mayor que el máximo");
-        return;
+      alert("El número mínimo de jugadores no puede ser mayor que el máximo");
+      return;
     }
 
     // Leer el selector de lista
@@ -417,51 +434,51 @@ addGame(event) {
 
     // Crear el objeto del juego
     const newGame = {
-        id: Date.now(),
-        name,
-        minPlayers,
-        maxPlayers,
-        duration,
-        description,
-        image: imageUrl,
-        link,
-        category,
+      id: Date.now(),
+      name,
+      minPlayers,
+      maxPlayers,
+      duration,
+      description,
+      image: imageUrl,
+      link,
+      category,
     };
 
     // Función para añadir a la lista correcta
     const finalizeAdd = (game, list) => {
-        if (list === "my-games") {
-            this.games.push(game);
-        } else {
-            this.wishlistGames.push(game);
-        }
-        this.saveGames();
-        this.saveWishlist();
-        this.renderGames();
+      if (list === "my-games") {
+        this.games.push(game);
+      } else {
+        this.wishlistGames.push(game);
+      }
+      this.saveGames();
+      this.saveWishlist();
+      this.renderGames();
 
-        const form = document.getElementById("game-form");
-        if (form) form.reset();
+      const form = document.getElementById("game-form");
+      if (form) form.reset();
 
-        const preview = document.getElementById("image-preview");
-        if (preview) preview.style.display = "none";
+      const preview = document.getElementById("image-preview");
+      if (preview) preview.style.display = "none";
 
-        alert("¡Juego añadido correctamente!");
-        this.showSection("my-games");
+      alert("¡Juego añadido correctamente!");
+      this.showSection("my-games");
     };
 
     // Si hay input file y archivo seleccionado, guardamos base64
     if (imageUpload && imageUpload.files && imageUpload.files.length > 0) {
-        const file = imageUpload.files[0];
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            newGame.image = e.target.result;
-            finalizeAdd(newGame, list);
-        };
-        reader.readAsDataURL(file);
-    } else {
+      const file = imageUpload.files[0];
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        newGame.image = e.target.result;
         finalizeAdd(newGame, list);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      finalizeAdd(newGame, list);
     }
-}
+  }
 
   // Finalizar la adición del juego (con comprobaciones seguras)
   finalizeAddGame(game) {
@@ -503,29 +520,25 @@ addGame(event) {
 
   // Filtrar juegos (solo en "Mis juegos")
   filterGames() {
-    const nameFilter = document
-      .getElementById("search-name")
-      .value.toLowerCase();
+    const nameFilter = this.normalizeText(
+      document.getElementById("search-name").value
+    );
     const playersFilter = parseInt(
       document.getElementById("search-players").value
     );
     const durationFilter = document.getElementById("search-duration").value;
 
     const filteredGames = this.games.filter((game) => {
-      // Filtrar por nombre
-      if (nameFilter && !game.name.toLowerCase().includes(nameFilter)) {
-        return false;
-      }
+      const gameName = this.normalizeText(game.name); // normalizamos solo para comparar
 
-      // Filtrar por número de jugadores
+      if (nameFilter && !this.normalizeText(game.name).includes(this.normalizeText(nameFilter))) {
+    return false;
+    }
       if (
         playersFilter &&
         (playersFilter < game.minPlayers || playersFilter > game.maxPlayers)
-      ) {
+      )
         return false;
-      }
-
-      // Filtrar por duración
       if (durationFilter) {
         if (durationFilter === "short" && game.duration >= 30) return false;
         if (
@@ -535,7 +548,6 @@ addGame(event) {
           return false;
         if (durationFilter === "long" && game.duration <= 60) return false;
       }
-
       return true;
     });
 
@@ -544,20 +556,21 @@ addGame(event) {
 
   // Buscar en "Mis juegos" + "Deseados"
   searchGames() {
-    const nameFilter = document
-      .getElementById("search-name-all")
-      .value.toLowerCase();
+    const nameFilter = this.normalizeText(
+      document.getElementById("search-name-all").value
+    );
     const playersFilter = parseInt(
       document.getElementById("search-players-all").value
     );
     const durationFilter = document.getElementById("search-duration-all").value;
 
-    // 👇 Usa wishlistGames (no wishlist)
     const allGames = [...this.games, ...this.wishlistGames];
 
     const results = allGames.filter((game) => {
-      if (nameFilter && !game.name.toLowerCase().includes(nameFilter))
-        return false;
+      const gameName = this.normalizeText(game.name); // normalizamos solo para comparar
+
+      if (nameFilter && !this.normalizeText(game.name).includes(this.normalizeText(nameFilter)))
+    return false;
       if (
         playersFilter &&
         (playersFilter < game.minPlayers || playersFilter > game.maxPlayers)

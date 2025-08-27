@@ -587,3 +587,33 @@ header p {
     }
 }
 
+/* Botones */
+button,
+input[type="button"],
+input[type="submit"] {
+    -webkit-appearance: none; /* elimina el estilo nativo de iOS */
+    appearance: none;
+    color: var(--color-text); /* tu color gris */
+    background-color: var(--color-primary); /* o el que uses */
+    border: none; /* si quieres */
+    text-decoration: none;
+}
+
+/* Select / dropdown */
+select {
+    -webkit-appearance: none; /* elimina el estilo nativo de iOS */
+    appearance: none;
+    color: var(--color-text);
+    background-color: white; /* o tu color de fondo */
+    border: 1px solid #ddd;
+    border-radius: var(--radius);
+    padding: 10px 15px;
+}
+
+/* Opcional: quitar resaltado azul al hacer focus en Safari/iOS */
+button:focus,
+input:focus,
+select:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--color-primary);
+}
