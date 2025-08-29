@@ -39,6 +39,8 @@ Una aplicación de escritorio para gestionar tu colección de juegos de mesa y t
 
 Crear una herramienta de escritorio fácil de usar y visualmente atractiva para coleccionistas y jugadores de mesa, manteniendo todas las funcionalidades de la versión web.
 
+[Descargar instalador](https://github.com/river0e/BBDD_JuegosDeMesa/releases/download/v1.0.0/Mis%20Juegos%20Setup%201.0.0.exe)
+
 ---
 
 ## 📜 Licencia
@@ -53,3 +55,4 @@ Todos los derechos reservados.
 ✅ **Se permite:**  
 - Visualizar y usar el proyecto para fines personales sin redistribución.  
 - Para cualquier otro uso, contacta con el autor.
+
