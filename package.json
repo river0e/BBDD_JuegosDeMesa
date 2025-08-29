@@ -1,0 +1,36 @@
+{
+  "name": "juegosdemesa-app",
+  "version": "1.0.0",
+  "description": "App de Juegos de Mesa con Electron",
+  "author": "river0e",
+  "license": "LicenseRef-ProyectoPropio",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder"
+  },
+  "build": {
+    "appId": "com.river0e.juegosdemesa",
+    "productName": "Mis Juegos",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "**/*"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icono.ico"
+    },
+    "mac": {
+      "icon": "assets/icono.png"
+    },
+    "linux": {
+      "icon": "assets/icono.png"
+    }
+  },
+  "devDependencies": {
+    "electron": "^26.6.10",
+    "electron-builder": "^24.6.0"
+  }
+}
